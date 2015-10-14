@@ -32,6 +32,10 @@
     "pinkie-promise": "^1.0.0"
   },
   "devDependencies": {
+    "ip": "^1.0.1",
     "mocha": "^2.3.3"
-  }
+  },
+  "files": [
+    "index.js"
+  ]
 }
