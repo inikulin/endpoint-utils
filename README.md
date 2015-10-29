@@ -54,7 +54,7 @@ isMyHostname('172.22.5.80').then(isMy => {
 });
 ```
 
-### Get hostname which can be resolved to the current machine
+### Get hostname or IP address which can be resolved to the current machine
 ```js
 const getMyHostname = require('endpoint-utils').getMyHostname;
 

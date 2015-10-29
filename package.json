@@ -1,6 +1,6 @@
 {
   "name": "endpoint-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Utils to deal with TCP ports and hostnames. Safe for everyday use.",
   "main": "index.js",
   "scripts": {
@@ -29,10 +29,10 @@
   },
   "homepage": "https://github.com/inikulin/endpoint-utils#readme",
   "dependencies": {
-    "pinkie-promise": "^1.0.0"
+    "pinkie-promise": "^1.0.0",
+    "ip": "^1.0.1"
   },
   "devDependencies": {
-    "ip": "^1.0.1",
     "mocha": "^2.3.3"
   },
   "files": [

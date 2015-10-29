@@ -1,6 +1,28 @@
 var os           = require('os');
+var ip           = require('ip');
 var Promise      = require('pinkie-promise');
 var createServer = require('net').createServer;
+
+function createServerOnFreePort() {
+    return new Promise(function (resolve) {
+        var server = createServer();
+
+        server.once('listening', function () {
+            resolve(server);
+        });
+
+        server.listen(0);
+    });
+}
+
+function closeServers(servers) {
+    return Promise.all(servers.map(function (server) {
+        return new Promise(function (resolve) {
+            server.once('close', resolve);
+            server.close();
+        });
+    }));
+}
 
 function checkAvailability (port, hostname) {
     return new Promise(function (resolve) {
@@ -27,38 +49,32 @@ function isFreePort (port) {
 }
 
 function getFreePort () {
-    return new Promise(function (resolve) {
-        var server = createServer();
-
-        server.once('listening', function () {
-            var port = server.address().port;
-
-            server.once('close', function () {
-                resolve(port);
-            });
-
-            server.close()
-        });
-
-        server.listen(0);
+    return getFreePorts(1).then(function (ports) {
+        return ports[0];
     });
 }
 
 function getFreePorts (count) {
-    var seq     = Promise.resolve(),
-        ports   = [],
-        addPort = ports.push.bind(ports);
+    var serverPromises = [];
+    var ports = null;
 
-    //NOTE: Do it sequentially to avoid interference.
-    for (var i = 0; i < count; i++) {
-        seq = seq
-            .then(getFreePort)
-            .then(addPort);
-    }
+    // NOTE: Sequentially collect listening
+    // servers to avoid interference.
+    for (var i = 0; i < count; i++)
+        serverPromises.push(createServerOnFreePort());
 
-    return seq.then(function () {
-        return ports;
-    });
+    return Promise.all(serverPromises)
+        .then(function(servers) {
+            ports = servers.map(function (server) {
+                return server.address().port;
+            });
+
+            return servers
+        })
+        .then(closeServers)
+        .then(function () {
+            return ports;
+        });
 }
 
 function isMyHostname (hostname) {
@@ -81,11 +97,11 @@ function getMyHostname () {
 
                 return isMyHostname(hostname)
                     .then(function (mine) {
-                        return mine ? hostname : '127.0.0.1';
+                        return mine ? hostname : ip.address();
                     });
             }
 
-            return '127.0.0.1';
+            return ip.address();
         });
 }
 
