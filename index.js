@@ -3,7 +3,7 @@ var ip           = require('ip');
 var Promise      = require('pinkie-promise');
 var createServer = require('net').createServer;
 
-function createServerOnFreePort() {
+function createServerOnFreePort () {
     return new Promise(function (resolve) {
         var server = createServer();
 
@@ -15,7 +15,7 @@ function createServerOnFreePort() {
     });
 }
 
-function closeServers(servers) {
+function closeServers (servers) {
     return Promise.all(servers.map(function (server) {
         return new Promise(function (resolve) {
             server.once('close', resolve);
@@ -56,7 +56,7 @@ function getFreePort () {
 
 function getFreePorts (count) {
     var serverPromises = [];
-    var ports = null;
+    var ports          = null;
 
     // NOTE: Sequentially collect listening
     // servers to avoid interference.
@@ -64,7 +64,7 @@ function getFreePorts (count) {
         serverPromises.push(createServerOnFreePort());
 
     return Promise.all(serverPromises)
-        .then(function(servers) {
+        .then(function (servers) {
             ports = servers.map(function (server) {
                 return server.address().port;
             });
@@ -105,10 +105,15 @@ function getMyHostname () {
         });
 }
 
+function getIPAddress () {
+    return ip.address();
+}
+
 module.exports = {
     isFreePort:    isFreePort,
     getFreePort:   getFreePort,
     getFreePorts:  getFreePorts,
     isMyHostname:  isMyHostname,
-    getMyHostname: getMyHostname
+    getMyHostname: getMyHostname,
+    getIPAddress:  getIPAddress
 };

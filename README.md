@@ -64,5 +64,13 @@ getMyHostname().then(hostname => {
 });
 ```
 
+### Get IP address of current machine
+```js
+const getIPAddress = require('endpoint-utils').getIPAddress;
+
+console.log(getIPAddress());
+//> "172.22.5.80"
+```
+
 ## Author
 [Ivan Nikulin](https://github.com/inikulin) (ifaaan@gmail.com)
