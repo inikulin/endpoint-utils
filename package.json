@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/inikulin/endpoint-utils#readme",
   "dependencies": {
-    "ip": "^2.0.0",
+    "ip": "^2.0.1",
     "pinkie-promise": "^1.0.0"
   },
   "devDependencies": {
